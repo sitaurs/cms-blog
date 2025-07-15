@@ -5,11 +5,10 @@
 1. [Pendahuluan](#pendahuluan)
 2. [Persyaratan Sistem](#persyaratan-sistem)
 3. [Instalasi di VPS Ubuntu](#instalasi-di-vps-ubuntu)
-   - [Langkah 1: Update Sistem](#langkah-1-update-sistem)
-   - [Langkah 2: Instalasi Node.js dan npm](#langkah-2-instalasi-nodejs-dan-npm)
-   - [Langkah 3: Instalasi MongoDB](#langkah-3-instalasi-mongodb)
-   - [Langkah 4: Clone Repository](#langkah-4-clone-repository)
-   - [Langkah 5: Instalasi Dependencies](#langkah-5-instalasi-dependencies)
+   - [Langkah 1: Install Node.js dan MongoDB](#langkah-1-install-nodejs-dan-mongodb)
+   - [Langkah 2: Instalasi Dependencies](#langkah-2-instalasi-dependencies)
+   - [Langkah 3: Konfigurasi .env](#langkah-3-konfigurasi-env)
+   - [Langkah 4: Menjalankan Backend & Frontend](#langkah-4-menjalankan-backend--frontend)
 4. [Konfigurasi](#konfigurasi)
    - [Variabel Lingkungan](#variabel-lingkungan)
 5. [Menjalankan Aplikasi](#menjalankan-aplikasi)
@@ -58,46 +57,37 @@ Blog CMS ini adalah sistem manajemen konten modern yang lengkap, dibangun menggu
 
 ## Instalasi di VPS Ubuntu
 
-### Langkah 1: Update Sistem
-
-```bash
-sudo apt update && sudo apt upgrade -y
-```
-
-### Langkah 2: Instalasi Node.js dan npm
+### Langkah 1: Install Node.js dan MongoDB
 
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt install -y nodejs
-node -v
-npm -v
+sudo apt install -y nodejs mongodb-org
+sudo systemctl enable --now mongod
 ```
 
-### Langkah 3: Instalasi MongoDB
+### Langkah 2: Instalasi Dependencies
 
 ```bash
-wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
-sudo apt update
-sudo apt install -y mongodb-org
-sudo systemctl start mongod
-sudo systemctl enable mongod
+npm install
+cd server && npm install
 ```
 
-### Langkah 4: Clone Repository
+### Langkah 3: Konfigurasi .env
 
 ```bash
-git clone <url-repository-anda>
-cd blog-cms
+cp server/.env.example server/.env
+# Sunting nilai variabel sesuai kebutuhan
 ```
 
-### Langkah 5: Instalasi Dependencies
+### Langkah 4: Menjalankan Backend & Frontend
 
 ```bash
+# Terminal 1
 cd server
-npm install
-cd ../src
-npm install
+npm run dev
+
+# Terminal 2
+npm run dev
 ```
 
 ---
@@ -106,7 +96,7 @@ npm install
 
 ### Variabel Lingkungan
 
-Buat file `.env` di direktori `server` dan `src` dengan variabel berikut:
+Buat file `.env` di direktori `server` (salin dari `.env.example`) dengan variabel berikut:
 
 ```
 MONGODB_URI=mongodb://localhost:27017/blog-cms
@@ -123,11 +113,15 @@ Sesuaikan nilai sesuai kebutuhan.
 ### Mode Pengembangan
 
 ```bash
+# Terminal 1
 cd server
+npm run dev
+
+# Terminal 2
 npm run dev
 ```
 
-Aplikasi frontend akan berjalan di `http://localhost:3000`
+Backend tersedia di `http://localhost:5000` dan frontend di `http://localhost:3000`
 
 ### Mode Produksi
 
