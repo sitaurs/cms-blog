@@ -1,77 +1,77 @@
-# BlogCMS - Modern Content Management System
+# Blog CMS - Complete Installation, Deployment, and Usage Guide
 
-A modern, full-featured blog CMS built with React, TypeScript, Node.js, and MongoDB.
+## Table of Contents
 
-## Features
+1. [Introduction](#introduction)
+2. [System Requirements](#system-requirements)
+3. [Installation on Ubuntu VPS](#installation-on-ubuntu-vps)
+   - [Step 1: Update System](#step-1-update-system)
+   - [Step 2: Install Node.js and npm](#step-2-install-nodejs-and-npm)
+   - [Step 3: Install MongoDB](#step-3-install-mongodb)
+   - [Step 4: Clone Repository](#step-4-clone-repository)
+   - [Step 5: Install Dependencies](#step-5-install-dependencies)
+4. [Configuration](#configuration)
+   - [Environment Variables](#environment-variables)
+5. [Running the Application](#running-the-application)
+   - [Development Mode](#development-mode)
+   - [Production Mode](#production-mode)
+6. [Deployment](#deployment)
+   - [Using PM2](#using-pm2)
+   - [Nginx Reverse Proxy Setup](#nginx-reverse-proxy-setup)
+7. [Features and Usage](#features-and-usage)
+   - [User Authentication](#user-authentication)
+   - [Post Management](#post-management)
+   - [SEO Optimization](#seo-optimization)
+   - [Rich Text Editor](#rich-text-editor)
+   - [Advanced Search](#advanced-search)
+   - [Comments and Moderation](#comments-and-moderation)
+   - [User Roles and Permissions](#user-roles-and-permissions)
+   - [Analytics and Monitoring](#analytics-and-monitoring)
+   - [Monetization Features](#monetization-features)
+8. [API Documentation](#api-documentation)
+9. [Troubleshooting](#troubleshooting)
+10. [Contributing](#contributing)
+11. [License](#license)
 
-### Backend Features
-- **Authentication & Authorization**: JWT-based authentication with role-based access control (Admin, Editor, Reader)
-- **RESTful API**: Complete CRUD operations for posts, categories, tags, and comments
-- **Content Management**: Advanced post management with drafts, publishing, and scheduling
-- **Comment System**: Nested comments with moderation capabilities
-- **Media Management**: File upload and management system
-- **Security**: Input validation, rate limiting, and security best practices
+---
 
-### Frontend Features
-- **Modern UI**: Beautiful, responsive design with glassmorphism effects
-- **Dark/Light Mode**: Persistent theme switching
-- **Admin Dashboard**: Comprehensive admin interface with analytics
-- **Rich Text Editor**: Advanced content creation tools
-- **SEO Optimization**: Built-in SEO tools and meta management
-- **Responsive Design**: Mobile-first approach with Tailwind CSS
+## Introduction
 
-### Technical Stack
-- **Frontend**: React 18, TypeScript, Tailwind CSS, React Router, Tanstack Query
-- **Backend**: Node.js, Express.js, TypeScript, MongoDB, Mongoose
-- **Authentication**: JWT tokens with bcrypt password hashing
-- **Real-time**: Socket.io for real-time features
-- **Deployment**: Docker-ready with production configurations
+This Blog CMS is a modern, full-featured content management system built with React, TypeScript, Node.js, and MongoDB. It supports advanced SEO features, rich text editing, user authentication, comments, analytics, and monetization options.
 
-## Installation
+---
 
-### Prerequisites
-- Node.js (v18 or higher)
-- MongoDB (v5 or higher)
-- npm or yarn
+## System Requirements
 
-### Backend Setup
+- Ubuntu 20.04 or later
+- Node.js v18 or later
+- npm v9 or later
+- MongoDB 5.0 or later
+- PM2 (for process management)
+- Nginx (for reverse proxy)
 
-1. Navigate to server directory:
+---
+
+## Installation on Ubuntu VPS
+
+### Step 1: Update System
+
 ```bash
-cd server
+sudo apt update && sudo apt upgrade -y
 ```
 
-2. Install dependencies:
+### Step 2: Install Node.js and npm
+
 ```bash
-npm install
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt install -y nodejs
+node -v
+npm -v
 ```
 
-3. Create environment file:
+### Step 3: Install MongoDB
+
 ```bash
-cp .env.example .env
-```
-
-4. Update environment variables in `.env`:
-```env
-MONGODB_URI=mongodb://localhost:27017/blog-cms
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-PORT=5000
-NODE_ENV=development
-FRONTEND_URL=http://localhost:3000
-```
-
-5. Build and start the server:
-```bash
-npm run build
-npm start
-```
-
-For development:
-```bash
-npm run dev
-```
-
-### Frontend Setup
 
 1. Install dependencies:
 ```bash

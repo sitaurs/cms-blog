@@ -4,6 +4,8 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { Save, Eye, Send, ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import { api } from '../services/api';
 import toast from 'react-hot-toast';
+import SEOAnalyzer from '../components/SEOAnalyzer';
+import RichTextEditor from '../components/RichTextEditor';
 
 const CreatePost: React.FC = () => {
   const navigate = useNavigate();
@@ -171,12 +173,10 @@ const CreatePost: React.FC = () => {
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Content *
                 </label>
-                <textarea
-                  name="content"
-                  value={formData.content}
-                  onChange={handleInputChange}
-                  rows={20}
-                  className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 transition-colors duration-200"
+                <RichTextEditor
+                  content={formData.content}
+                  onChange={(content: string) => setFormData(prev => ({ ...prev, content }))}
+                  className="min-h-[300px]"
                   placeholder="Write your post content here..."
                 />
               </div>
@@ -188,7 +188,21 @@ const CreatePost: React.FC = () => {
             <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">
               SEO Settings
             </h3>
-            <div className="space-y-4">
+            <SEOAnalyzer
+              title={formData.title}
+              content={formData.content}
+              excerpt={formData.excerpt}
+              seo={{
+                title: formData.seoTitle,
+                description: formData.seoDescription,
+                keywords: formData.seoKeywords,
+                focusKeyword: formData.seoKeywords?.[0] || ''
+              }}
+              onScoreUpdate={(score: number) => {
+                // Optionally handle SEO score updates here
+              }}
+            />
+            <div className="space-y-4 mt-6">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   SEO Title

@@ -13,9 +13,38 @@ export interface IPost extends Document {
   publishedAt?: Date;
   views: number;
   likes: number;
-  seoTitle?: string;
-  seoDescription?: string;
-  seoKeywords?: string[];
+  seo: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+    canonicalUrl?: string;
+    ogTitle?: string;
+    ogDescription?: string;
+    ogImage?: string;
+    twitterTitle?: string;
+    twitterDescription?: string;
+    twitterImage?: string;
+    focusKeyword?: string;
+    readabilityScore?: number;
+    seoScore?: number;
+  };
+  analytics: {
+    views: number;
+    uniqueViews: number;
+    shares: number;
+    comments: number;
+    avgReadTime?: number;
+    bounceRate?: number;
+    lastViewedAt?: Date;
+  };
+  monetization: {
+    isPremium: boolean;
+    hasAds: boolean;
+    affiliateLinks: string[];
+    sponsoredContent: boolean;
+  };
+  readTime: number;
+  structuredData?: any;
   isFeature: boolean;
   allowComments: boolean;
   createdAt: Date;
@@ -80,18 +109,91 @@ const postSchema = new Schema<IPost>({
     type: Number,
     default: 0
   },
-  seoTitle: {
-    type: String,
-    maxlength: 60
+  seo: {
+    title: {
+      type: String,
+      maxlength: 60
+    },
+    description: {
+      type: String,
+      maxlength: 160
+    },
+    keywords: [{
+      type: String,
+      trim: true
+    }],
+    canonicalUrl: String,
+    ogTitle: {
+      type: String,
+      maxlength: 60
+    },
+    ogDescription: {
+      type: String,
+      maxlength: 160
+    },
+    ogImage: String,
+    twitterTitle: {
+      type: String,
+      maxlength: 60
+    },
+    twitterDescription: {
+      type: String,
+      maxlength: 160
+    },
+    twitterImage: String,
+    focusKeyword: String,
+    readabilityScore: {
+      type: Number,
+      min: 0,
+      max: 100
+    },
+    seoScore: {
+      type: Number,
+      min: 0,
+      max: 100
+    }
   },
-  seoDescription: {
-    type: String,
-    maxlength: 160
+  analytics: {
+    views: {
+      type: Number,
+      default: 0
+    },
+    uniqueViews: {
+      type: Number,
+      default: 0
+    },
+    shares: {
+      type: Number,
+      default: 0
+    },
+    comments: {
+      type: Number,
+      default: 0
+    },
+    avgReadTime: Number,
+    bounceRate: Number,
+    lastViewedAt: Date
   },
-  seoKeywords: [{
-    type: String,
-    trim: true
-  }],
+  monetization: {
+    isPremium: {
+      type: Boolean,
+      default: false
+    },
+    hasAds: {
+      type: Boolean,
+      default: true
+    },
+    affiliateLinks: [String],
+    sponsoredContent: {
+      type: Boolean,
+      default: false
+    }
+  },
+  readTime: {
+    type: Number,
+    default: 0
+  },
+  structuredData: Schema.Types.Mixed,
   isFeature: {
     type: Boolean,
     default: false
