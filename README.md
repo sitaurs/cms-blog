@@ -1,66 +1,70 @@
-# Blog CMS - Complete Installation, Deployment, and Usage Guide
+# Blog CMS - Panduan Lengkap Instalasi, Deployment, dan Penggunaan
 
-## Table of Contents
+## Daftar Isi
 
-1. [Introduction](#introduction)
-2. [System Requirements](#system-requirements)
-3. [Installation on Ubuntu VPS](#installation-on-ubuntu-vps)
-   - [Step 1: Update System](#step-1-update-system)
-   - [Step 2: Install Node.js and npm](#step-2-install-nodejs-and-npm)
-   - [Step 3: Install MongoDB](#step-3-install-mongodb)
-   - [Step 4: Clone Repository](#step-4-clone-repository)
-   - [Step 5: Install Dependencies](#step-5-install-dependencies)
-4. [Configuration](#configuration)
-   - [Environment Variables](#environment-variables)
-5. [Running the Application](#running-the-application)
-   - [Development Mode](#development-mode)
-   - [Production Mode](#production-mode)
+1. [Pendahuluan](#pendahuluan)
+2. [Persyaratan Sistem](#persyaratan-sistem)
+3. [Instalasi di VPS Ubuntu](#instalasi-di-vps-ubuntu)
+   - [Langkah 1: Update Sistem](#langkah-1-update-sistem)
+   - [Langkah 2: Instalasi Node.js dan npm](#langkah-2-instalasi-nodejs-dan-npm)
+   - [Langkah 3: Instalasi MongoDB](#langkah-3-instalasi-mongodb)
+   - [Langkah 4: Clone Repository](#langkah-4-clone-repository)
+   - [Langkah 5: Instalasi Dependencies](#langkah-5-instalasi-dependencies)
+4. [Konfigurasi](#konfigurasi)
+   - [Variabel Lingkungan](#variabel-lingkungan)
+5. [Menjalankan Aplikasi](#menjalankan-aplikasi)
+   - [Mode Pengembangan](#mode-pengembangan)
+   - [Mode Produksi](#mode-produksi)
 6. [Deployment](#deployment)
-   - [Using PM2](#using-pm2)
-   - [Nginx Reverse Proxy Setup](#nginx-reverse-proxy-setup)
-7. [Features and Usage](#features-and-usage)
-   - [User Authentication](#user-authentication)
-   - [Post Management](#post-management)
-   - [SEO Optimization](#seo-optimization)
-   - [Rich Text Editor](#rich-text-editor)
-   - [Advanced Search](#advanced-search)
-   - [Comments and Moderation](#comments-and-moderation)
-   - [User Roles and Permissions](#user-roles-and-permissions)
-   - [Analytics and Monitoring](#analytics-and-monitoring)
-   - [Monetization Features](#monetization-features)
-8. [API Documentation](#api-documentation)
-9. [Troubleshooting](#troubleshooting)
-10. [Contributing](#contributing)
-11. [License](#license)
+   - [Menggunakan PM2](#menggunakan-pm2)
+   - [Konfigurasi Nginx Reverse Proxy](#konfigurasi-nginx-reverse-proxy)
+   - [Sertifikat SSL](#sertifikat-ssl)
+   - [Deployment dengan Docker](#deployment-dengan-docker)
+7. [Fitur dan Penggunaan](#fitur-dan-penggunaan)
+   - [Autentikasi Pengguna](#autentikasi-pengguna)
+   - [Manajemen Postingan](#manajemen-postingan)
+   - [Optimasi SEO](#optimasi-seo)
+   - [Editor Teks Kaya](#editor-teks-kaya)
+   - [Pencarian Lanjutan](#pencarian-lanjutan)
+   - [Komentar dan Moderasi](#komentar-dan-moderasi)
+   - [Peran dan Izin Pengguna](#peran-dan-izin-pengguna)
+   - [Analitik dan Monitoring](#analitik-dan-monitoring)
+   - [Fitur Monetisasi](#fitur-monetisasi)
+8. [Dokumentasi API](#dokumentasi-api)
+9. [Pemecahan Masalah](#pemecahan-masalah)
+10. [Kontribusi](#kontribusi)
+11. [Lisensi](#lisensi)
+12. [Dukungan](#dukungan)
+13. [Roadmap](#roadmap)
 
 ---
 
-## Introduction
+## Pendahuluan
 
-This Blog CMS is a modern, full-featured content management system built with React, TypeScript, Node.js, and MongoDB. It supports advanced SEO features, rich text editing, user authentication, comments, analytics, and monetization options.
-
----
-
-## System Requirements
-
-- Ubuntu 20.04 or later
-- Node.js v18 or later
-- npm v9 or later
-- MongoDB 5.0 or later
-- PM2 (for process management)
-- Nginx (for reverse proxy)
+Blog CMS ini adalah sistem manajemen konten modern yang lengkap, dibangun menggunakan React, TypeScript, Node.js, dan MongoDB. Mendukung fitur SEO canggih, editor teks kaya, autentikasi pengguna, komentar, analitik, dan opsi monetisasi.
 
 ---
 
-## Installation on Ubuntu VPS
+## Persyaratan Sistem
 
-### Step 1: Update System
+- Ubuntu 20.04 atau versi lebih baru
+- Node.js v18 atau lebih baru
+- npm v9 atau lebih baru
+- MongoDB 5.0 atau lebih baru
+- PM2 (untuk manajemen proses)
+- Nginx (untuk reverse proxy)
+
+---
+
+## Instalasi di VPS Ubuntu
+
+### Langkah 1: Update Sistem
 
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
-### Step 2: Install Node.js and npm
+### Langkah 2: Instalasi Node.js dan npm
 
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
@@ -69,145 +73,96 @@ node -v
 npm -v
 ```
 
-### Step 3: Install MongoDB
+### Langkah 3: Instalasi MongoDB
 
 ```bash
+wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+sudo apt update
+sudo apt install -y mongodb-org
+sudo systemctl start mongod
+sudo systemctl enable mongod
+```
 
-1. Install dependencies:
+### Langkah 4: Clone Repository
+
 ```bash
+git clone <url-repository-anda>
+cd blog-cms
+```
+
+### Langkah 5: Instalasi Dependencies
+
+```bash
+cd server
+npm install
+cd ../src
 npm install
 ```
 
-2. Start the development server:
+---
+
+## Konfigurasi
+
+### Variabel Lingkungan
+
+Buat file `.env` di direktori `server` dan `src` dengan variabel berikut:
+
+```
+MONGODB_URI=mongodb://localhost:27017/blog-cms
+JWT_SECRET=your_jwt_secret_key
+PORT=5000
+```
+
+Sesuaikan nilai sesuai kebutuhan.
+
+---
+
+## Menjalankan Aplikasi
+
+### Mode Pengembangan
+
 ```bash
+cd server
 npm run dev
 ```
 
-The application will be available at `http://localhost:3000`
+Aplikasi frontend akan berjalan di `http://localhost:3000`
 
-## API Endpoints
+### Mode Produksi
 
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
-- `GET /api/auth/profile` - Get user profile
-- `PUT /api/auth/profile` - Update user profile
+Build dan jalankan aplikasi:
 
-### Posts
-- `GET /api/posts` - Get all posts (with filters)
-- `GET /api/posts/:id` - Get single post
-- `POST /api/posts` - Create new post
-- `PUT /api/posts/:id` - Update post
-- `DELETE /api/posts/:id` - Delete post
-- `GET /api/posts/featured` - Get featured posts
-
-### Comments
-- `GET /api/comments` - Get comments
-- `POST /api/comments` - Create comment
-- `PUT /api/comments/:id/status` - Update comment status
-- `DELETE /api/comments/:id` - Delete comment
-
-## Database Models
-
-### User Model
-```typescript
-{
-  username: string;
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  role: 'admin' | 'editor' | 'reader';
-  avatar?: string;
-  bio?: string;
-  isActive: boolean;
-  isEmailVerified: boolean;
-}
+```bash
+cd server
+npm run build
+pm2 start dist/server.js --name blog-cms-backend
 ```
 
-### Post Model
-```typescript
-{
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  featuredImage?: string;
-  author: ObjectId;
-  category: ObjectId;
-  tags: ObjectId[];
-  status: 'draft' | 'published' | 'archived';
-  publishedAt?: Date;
-  views: number;
-  likes: number;
-  seoTitle?: string;
-  seoDescription?: string;
-  seoKeywords?: string[];
-  isFeature: boolean;
-  allowComments: boolean;
-}
-```
-
-### Comment Model
-```typescript
-{
-  content: string;
-  author: ObjectId;
-  post: ObjectId;
-  parentComment?: ObjectId;
-  status: 'pending' | 'approved' | 'rejected';
-  likes: number;
-  replies: ObjectId[];
-}
-```
+---
 
 ## Deployment
 
-### VPS Ubuntu Deployment
+### Menggunakan PM2
 
-1. **Server Setup**:
+1. Install PM2 secara global:
+
 ```bash
-# Update system
-sudo apt update && sudo apt upgrade -y
-
-# Install Node.js
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# Install MongoDB
-wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
-sudo apt-get update
-sudo apt-get install -y mongodb-org
-
-# Install PM2
 sudo npm install -g pm2
-
-# Install Nginx
-sudo apt install nginx -y
 ```
 
-2. **Application Deployment**:
+2. Jalankan aplikasi dengan PM2:
+
 ```bash
-# Clone repository
-git clone <your-repo-url>
-cd blog-cms
-
-# Install dependencies
-cd server && npm install
-cd ../client && npm install
-
-# Build applications
-cd ../server && npm run build
-cd ../client && npm run build
-
-# Start with PM2
-pm2 start ecosystem.config.js
+pm2 start dist/server.js --name blog-cms-backend
 pm2 save
 pm2 startup
 ```
 
-3. **Nginx Configuration**:
+### Konfigurasi Nginx Reverse Proxy
+
+Buat file konfigurasi Nginx:
+
 ```nginx
 server {
     listen 80;
@@ -233,26 +188,35 @@ server {
 }
 ```
 
-4. **SSL Certificate**:
+Restart Nginx:
+
+```bash
+sudo systemctl restart nginx
+```
+
+### Sertifikat SSL
+
+Pasang sertifikat SSL dengan Certbot:
+
 ```bash
 sudo apt install certbot python3-certbot-nginx
 sudo certbot --nginx -d your-domain.com
 ```
 
-### Docker Deployment
+### Deployment dengan Docker
 
-1. **Build Docker Images**:
+1. Build Docker images:
+
 ```bash
-# Build backend
 cd server
 docker build -t blog-cms-backend .
 
-# Build frontend
-cd ../client
+cd ../src
 docker build -t blog-cms-frontend .
 ```
 
-2. **Run with Docker Compose**:
+2. Jalankan dengan Docker Compose:
+
 ```yaml
 version: '3.8'
 services:
@@ -269,12 +233,12 @@ services:
       - "5000:5000"
     environment:
       - MONGODB_URI=mongodb://mongodb:27017/blog-cms
-      - JWT_SECRET=your-jwt-secret
+      - JWT_SECRET=your_jwt_secret_key
     depends_on:
       - mongodb
 
   frontend:
-    build: ./client
+    build: ./src
     ports:
       - "3000:3000"
     depends_on:
@@ -284,73 +248,220 @@ volumes:
   mongodb_data:
 ```
 
+Jalankan:
+
 ```bash
 docker-compose up -d
 ```
 
-## Security Features
+---
 
-- JWT token authentication
-- Bcrypt password hashing
-- Input validation and sanitization
-- Rate limiting
-- CORS configuration
-- Helmet security headers
-- Role-based access control
-- XSS protection
+## Fitur dan Penggunaan
 
-## Performance Optimization
+### Autentikasi Pengguna
 
-- Image optimization and compression
+- Registrasi, login, dan manajemen profil pengguna.
+- Endpoint API: `/api/auth/register`, `/api/auth/login`, `/api/auth/profile`
+
+### Manajemen Postingan
+
+- Membuat, mengedit, menghapus, dan menampilkan postingan.
+- Endpoint API: `/api/posts`
+
+### Optimasi SEO
+
+- Pengaturan judul SEO, deskripsi, dan kata kunci untuk setiap postingan.
+
+### Editor Teks Kaya
+
+- Editor teks dengan fitur format lengkap untuk membuat konten postingan.
+
+### Pencarian Lanjutan
+
+- Fitur pencarian dengan filter dan analisis SEO.
+
+### Komentar dan Moderasi
+
+- Menambahkan, mengedit, dan menghapus komentar dengan status moderasi.
+
+### Peran dan Izin Pengguna
+
+- Role-based access control: admin, editor, pembaca.
+
+### Analitik dan Monitoring
+
+- Statistik pengunjung dan interaksi pengguna.
+
+### Fitur Monetisasi
+
+- Opsi monetisasi untuk konten dan iklan.
+
+---
+
+## Dokumentasi API
+
+### Autentikasi
+
+- `POST /api/auth/register` - Registrasi pengguna baru
+- `POST /api/auth/login` - Login pengguna
+- `GET /api/auth/profile` - Mendapatkan profil pengguna
+- `PUT /api/auth/profile` - Memperbarui profil pengguna
+
+### Postingan
+
+- `GET /api/posts` - Mendapatkan semua postingan (dengan filter)
+- `GET /api/posts/:id` - Mendapatkan postingan tunggal
+- `POST /api/posts` - Membuat postingan baru
+- `PUT /api/posts/:id` - Memperbarui postingan
+- `DELETE /api/posts/:id` - Menghapus postingan
+- `GET /api/posts/featured` - Mendapatkan postingan unggulan
+
+### Komentar
+
+- `GET /api/comments` - Mendapatkan komentar
+- `POST /api/comments` - Membuat komentar
+- `PUT /api/comments/:id/status` - Memperbarui status komentar
+- `DELETE /api/comments/:id` - Menghapus komentar
+
+---
+
+## Model Database
+
+### User
+
+```typescript
+{
+  username: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: 'admin' | 'editor' | 'reader';
+  avatar?: string;
+  bio?: string;
+  isActive: boolean;
+  isEmailVerified: boolean;
+}
+```
+
+### Post
+
+```typescript
+{
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  featuredImage?: string;
+  author: ObjectId;
+  category: ObjectId;
+  tags: ObjectId[];
+  status: 'draft' | 'published' | 'archived';
+  publishedAt?: Date;
+  views: number;
+  likes: number;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string[];
+  isFeature: boolean;
+  allowComments: boolean;
+}
+```
+
+### Comment
+
+```typescript
+{
+  content: string;
+  author: ObjectId;
+  post: ObjectId;
+  parentComment?: ObjectId;
+  status: 'pending' | 'approved' | 'rejected';
+  likes: number;
+  replies: ObjectId[];
+}
+```
+
+---
+
+## Fitur Keamanan
+
+- Autentikasi token JWT
+- Hashing password dengan Bcrypt
+- Validasi dan sanitasi input
+- Pembatasan rate
+- Konfigurasi CORS
+- Header keamanan Helmet
+- Kontrol akses berbasis peran
+- Proteksi XSS
+
+---
+
+## Optimasi Performa
+
+- Optimasi dan kompresi gambar
 - Lazy loading
 - Code splitting
-- Caching strategies
-- Database indexing
+- Strategi caching
+- Indexing database
 - Pagination
-- Search optimization
+- Optimasi pencarian
+
+---
 
 ## Testing
 
 ### Backend Testing
+
 ```bash
 cd server
 npm test
 ```
 
 ### Frontend Testing
+
 ```bash
-cd client
+cd src
 npm test
 ```
 
 ### E2E Testing
+
 ```bash
 npm run test:e2e
 ```
 
-## Contributing
+---
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+## Kontribusi
 
-## License
+1. Fork repository
+2. Buat branch fitur
+3. Commit perubahan
+4. Push ke branch
+5. Buat Pull Request
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+---
 
-## Support
+## Lisensi
 
-For support, email support@blogcms.com or join our Slack channel.
+Proyek ini dilisensikan di bawah MIT License - lihat file LICENSE untuk detail.
+
+---
+
+## Dukungan
+
+Untuk dukungan, email ke support@blogcms.com atau bergabung di channel Slack kami.
+
+---
 
 ## Roadmap
 
-- [ ] Multi-language support
-- [ ] Advanced analytics
-- [ ] Social media integration
-- [ ] Plugin system
-- [ ] Mobile app
-- [ ] GraphQL API
-- [ ] Real-time collaboration
-- [ ] Advanced SEO tools
+- [ ] Dukungan multi-bahasa
+- [ ] Analitik lanjutan
+- [ ] Integrasi media sosial
+- [ ] Sistem plugin
+- [ ] Aplikasi mobile
+- [ ] API GraphQL
+- [ ] Kolaborasi real-time
+- [ ] Alat SEO canggih
